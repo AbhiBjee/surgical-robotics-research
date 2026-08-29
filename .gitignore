@@ -1,0 +1,6 @@
+*.avi
+*.mov
+raw_*
+*.blend
+.DS_Store
+Thumbs.db

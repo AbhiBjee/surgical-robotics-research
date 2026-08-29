@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Surgical Robotics Research | Abhinaba Bhattacharjee</title>
+  <meta name="description"
+        content="Research on surgical simulation, tactile perception and sim-to-real transfer for robotic surgery. Purdue University.">
+  <link rel="icon" href="static/images/favicon.ico">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/academicons@1.9.4/css/academicons.min.css">
+
+  <style>
+    :root {
+      --ink:       #14181d;
+      --ink-soft:  #4a5560;
+      --paper:     #ffffff;
+      --paper-alt: #f5f6f4;
+      --accent:    #0f5b6b;
+      --accent-2:  #b8873a;
+      --rule:      #dfe2e0;
+    }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 17px;
+      line-height: 1.7;
+    }
+
+    .page-eyebrow {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.78rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent-2);
+      margin-bottom: 1rem;
+    }
+
+    .page-title {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-weight: 700;
+      font-size: 2.7rem;
+      line-height: 1.15;
+      letter-spacing: -0.015em;
+    }
+    @media screen and (max-width: 768px) {
+      .page-title { font-size: 2rem; }
+      body { font-size: 16px; }
+    }
+
+    .lede { color: var(--ink-soft); font-size: 1.08rem; max-width: 42rem; margin-top: 1.2rem; }
+
+    .section-heading {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-weight: 600;
+      font-size: 1.7rem;
+      margin-bottom: 0.4rem;
+    }
+    .section-heading::after {
+      content: "";
+      display: block;
+      width: 46px;
+      height: 3px;
+      background: var(--accent-2);
+      margin-top: 0.6rem;
+    }
+
+    /* Project entries. A link when live, a plain block when not. */
+    .project-entry {
+      display: block;
+      border-top: 1px solid var(--rule);
+      padding: 1.9rem 0;
+      color: inherit;
+      text-decoration: none;
+    }
+    .project-entry:last-of-type { border-bottom: 1px solid var(--rule); }
+    a.project-entry:hover { color: inherit; }
+    a.project-entry:hover .project-name { color: var(--accent); }
+    a.project-entry:focus-visible { outline: 3px solid var(--accent-2); outline-offset: 4px; }
+
+    .project-venue {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.74rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent-2);
+    }
+    .project-name {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-weight: 600;
+      font-size: 1.45rem;
+      line-height: 1.3;
+      margin: 0.35rem 0 0.5rem 0;
+      transition: color 0.16s ease;
+    }
+    .project-blurb { color: var(--ink-soft); font-size: 0.98rem; max-width: 44rem; }
+
+    .project-entry.is-pending { opacity: 0.52; }
+    .project-entry.is-pending .project-venue { color: var(--ink-soft); }
+
+    .arrow { color: var(--accent); font-size: 0.9rem; margin-left: 0.4rem; }
+
+    footer.footer { background: var(--paper-alt); color: var(--ink-soft); font-size: 0.9rem; }
+    footer.footer a { color: var(--accent); }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { transition: none !important; }
+    }
+  </style>
+</head>
+
+<body>
+
+<section class="section" style="padding-top: 5rem; padding-bottom: 2rem;">
+  <div class="container is-max-desktop">
+    <p class="page-eyebrow">Purdue University &nbsp;&middot;&nbsp; School of Mechanical Engineering</p>
+    <h1 class="page-title">Surgical Robotics Research</h1>
+    <p class="lede">
+      <!-- TODO: rewrite this paragraph in your own voice. Two sentences is enough. -->
+      Simulation, Finite Element digital Twin Modelling, Tactile Perception and Sim-to-real transfer for Robotic Surgery. The work below
+      builds physics-based digital twins of  deformable objects and soft tissues, extracts contact forces from them, and uses
+      those forces to drive Robotic Palpation for Tumor Localization or semi-automated motions for robotic manipulations in surgical skills tasks.
+    </p>
+    <p class="lede" style="font-size: 0.98rem;">
+      Maintained by <strong>Abhinaba Bhattacharjee</strong>, PhD candidate in Robotics and
+      Biomechanics.
+    </p>
+  </div>
+</section>
+
+<section class="section" style="padding-top: 1rem;">
+  <div class="container is-max-desktop">
+    <h2 class="section-heading">Projects</h2>
+
+    <!-- LIVE. This one is a real link because the folder exists. -->
+    <a class="project-entry" href="LiverTumorSurgicalTwin/">
+      <span class="project-venue">IROS 2026 Workshop &nbsp;&middot;&nbsp; Project page</span>
+      <div class="project-name">
+        Liver Tumor Surgical Twin<span class="arrow"><i class="fas fa-arrow-right"></i></span>
+      </div>
+      <p class="project-blurb">
+        Three finite element paradigms for representing a stiff tumour inside softer liver tissue,
+        compared under gravity and under robotic palpation, with the goal of a digital twin that
+        stays continuous and still runs at interactive frame rates.
+      </p>
+    </a>
+
+    <!-- PENDING. Notice this is a div and not a link, so it cannot be clicked.
+         When the folder is ready, change div to a and add href="SimVinci/",
+         then remove the is-pending class. -->
+    <div class="project-entry is-pending">
+      <span class="project-venue">In preparation</span>
+      <div class="project-name">SimVinci</div>
+      <p class="project-blurb">
+        A real-time surgical simulation framework compatible with the da Vinci Research Kit, built
+        around shared motion primitives for semi-automated manipulation of both rigid and
+        deformable objects.
+      </p>
+    </div>
+
+    <div class="project-entry is-pending">
+      <span class="project-venue">IROS 2024</span>
+      <div class="project-name">SeeBelow</div>
+      <p class="project-blurb">
+        Subsurface tumour geometry reconstruction from robotic palpation trajectories, evaluated on
+        a physical manipulator with a triaxial force and motion probe.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<footer class="footer" style="margin-top: 3rem;">
+  <div class="container is-max-desktop">
+    <div class="columns is-vcentered">
+      <div class="column">
+        <p style="margin: 0;">Abhinaba Bhattacharjee &nbsp;&middot;&nbsp; Purdue University</p>
+      </div>
+      <div class="column has-text-right-tablet">
+        <!-- TODO: replace these three handles with your own. -->
+        <a href="https://github.com/abhibjee" aria-label="GitHub">
+          <i class="fab fa-github fa-lg"></i></a> &nbsp;&nbsp;
+        <a href="https://scholar.google.com/citations?user=YOURID" aria-label="Google Scholar">
+          <i class="ai ai-google-scholar ai-lg"></i></a> &nbsp;&nbsp;
+        <a href="https://www.linkedin.com/in/YOURHANDLE" aria-label="LinkedIn">
+          <i class="fab fa-linkedin fa-lg"></i></a> &nbsp;&nbsp;
+        <a href="mailto:YOUREMAIL@purdue.edu" aria-label="Email">
+          <i class="fas fa-envelope fa-lg"></i></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

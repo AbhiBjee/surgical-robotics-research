@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- ============================================================
+       TODO 1: TITLE AND SEARCH ENGINE METADATA
+       Replace every value in this head block with your own.
+       Google Scholar and LinkedIn read these tags directly.
+       ============================================================ -->
+  <title>FEM Paradigms for Heterogeneity Modeling in Multi-Material Tissue-Tumor Surgical Twins</title>
+
+  <meta name="description"
+        content="A comparison of three finite element modelling paradigms for building real-time digital twins of layered tissue and tissue-tumor structures, evaluated on a CT-derived ex vivo liver with dVRK palpation.">
+  <meta name="keywords"
+        content="surgical simulation, digital twin, finite element method, tumor palpation, tactile perception, SOFA, dVRK, sim-to-real">
+  <meta name="author" content="Abhinaba Bhattacharjee">
+
+  <!-- Social sharing preview. Replace the URL with your live page URL once deployed. -->
+  <meta property="og:title" content="FEM Paradigms for Heterogeneity Modeling in Multi-Material Tissue-Tumor Surgical Twins">
+  <meta property="og:description" content="Three FEM formulations for tissue-tumor digital twins, compared under gravity and robotic palpation.">
+  <meta property="og:image" content="static/images/scene_overview.png">
+  <meta property="og:url" content="https://YOURUSERNAME.github.io/surgtwin/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="static/images/teaser.png">
+
+  <!-- Google Scholar indexing tags. These help your paper get picked up. -->
+  <meta name="citation_title" content="FEM Paradigms for Heterogeneity Modeling in Multi-Material Tissue-Tumor Surgical Twins">
+  <meta name="citation_author" content="Bhattacharjee, Abhinaba">
+  <meta name="citation_author" content="Shaikh, Noah">
+  <meta name="citation_author" content="Stefanidis, Dimitrios">
+  <meta name="citation_author" content="Qureshi, Ahmed">
+  <meta name="citation_author" content="Anwar, Sohel">
+  <meta name="citation_publication_date" content="2026">
+  <meta name="citation_pdf_url" content="https://YOURUSERNAME.github.io/surgtwin/static/pdfs/surgtwin_paper.pdf">
+
+  <!-- TODO 2: Replace this favicon with your own. Make a 32x32 PNG of your
+       liver mesh and convert it at favicon.io, then save as static/images/favicon.ico -->
+  <link rel="icon" href="static/images/favicon.ico">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/academicons@1.9.4/css/academicons.min.css">
+		
+		
+
+  <style>
+    /* ============================================================
+       Design tokens. Change these six values and the whole page
+       changes colour consistently. Nothing else needs editing.
+       ============================================================ */
+    :root {
+      --ink:        #14181d;   /* body text */
+      --ink-soft:   #4a5560;   /* captions and secondary text */
+      --paper:      #ffffff;
+      --paper-alt:  #f5f6f4;   /* alternating section background */
+      --accent:     #0f5b6b;   /* deep clinical teal, used for links */
+      --accent-2:   #b8873a;   /* muted gold, used for rules and markers */
+      --rule:       #dfe2e0;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 17px;
+      line-height: 1.7;
+    }
+
+    .publication-title {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-weight: 700;
+      font-size: 2.6rem;
+      line-height: 1.18;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+    }
+    @media screen and (max-width: 768px) {
+      .publication-title { font-size: 1.85rem; }
+      body { font-size: 16px; }
+    }
+
+    .venue-eyebrow {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.78rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent-2);
+      margin-bottom: 1.1rem;
+    }
+
+    .author-line { font-size: 1.05rem; margin-top: 1.4rem; }
+    .author-line a { color: var(--accent); text-decoration: none; }
+    .author-line a:hover { text-decoration: underline; }
+    .affiliation-line { color: var(--ink-soft); font-size: 0.95rem; margin-top: 0.5rem; }
+
+    .section-heading {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-weight: 600;
+      font-size: 1.9rem;
+      margin-bottom: 1.2rem;
+    }
+    .section-heading::after {
+      content: "";
+      display: block;
+      width: 46px;
+      height: 3px;
+      background: var(--accent-2);
+      margin-top: 0.6rem;
+    }
+    .is-centered .section-heading::after { margin-left: auto; margin-right: auto; }
+
+    .section-alt { background: var(--paper-alt); }
+
+    .link-block a {
+      background: var(--ink);
+      color: #ffffff;
+      border: none;
+      border-radius: 999px;
+      padding: 0 1.35rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: background 0.16s ease;
+    }
+    .link-block a:hover { background: var(--accent); color: #ffffff; }
+    .link-block a:focus-visible { outline: 3px solid var(--accent-2); outline-offset: 2px; }
+    .link-block { display: inline-block; margin: 0.3rem 0.25rem; }
+
+    figure figcaption {
+      color: var(--ink-soft);
+      font-size: 0.92rem;
+      line-height: 1.6;
+      margin-top: 0.9rem;
+      text-align: left;
+    }
+
+    .formulation-card {
+      background: var(--paper);
+      border: 1px solid var(--rule);
+      border-top: 4px solid var(--accent);
+      border-radius: 4px;
+      padding: 1.6rem 1.5rem;
+      height: 100%;
+    }
+    .formulation-card.is-winner { border-top-color: var(--accent-2); }
+    .formulation-tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      color: var(--accent-2);
+      text-transform: uppercase;
+    }
+    .formulation-card h3 {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-weight: 600;
+      font-size: 1.2rem;
+      margin: 0.4rem 0 0.7rem 0;
+    }
+    .formulation-card p { font-size: 0.95rem; color: var(--ink-soft); }
+
+    table.data-table { width: 100%; border-collapse: collapse; font-size: 0.94rem; }
+    table.data-table th {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.76rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      text-align: left;
+      padding: 0.6rem 0.75rem;
+      border-bottom: 2px solid var(--ink);
+      font-weight: 500;
+    }
+    table.data-table td {
+      padding: 0.65rem 0.75rem;
+      border-bottom: 1px solid var(--rule);
+      font-variant-numeric: tabular-nums;
+    }
+    table.data-table tr.is-highlight td { background: rgba(184, 135, 58, 0.10); font-weight: 600; }
+    .table-scroll { overflow-x: auto; }
+
+    pre.bibtex {
+      background: var(--ink);
+      color: #e6ebe8;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      padding: 1.5rem;
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+
+    .copy-button {
+      background: transparent;
+      border: 1px solid var(--rule);
+      border-radius: 999px;
+      color: var(--ink-soft);
+      cursor: pointer;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.76rem;
+      letter-spacing: 0.08em;
+      padding: 0.35rem 0.9rem;
+      text-transform: uppercase;
+    }
+    .copy-button:hover { border-color: var(--accent); color: var(--accent); }
+
+    video, img { max-width: 100%; height: auto; display: block; }
+
+    footer.footer { background: var(--paper-alt); color: var(--ink-soft); font-size: 0.88rem; }
+    footer.footer a { color: var(--accent); }
+
+    a:focus-visible { outline: 3px solid var(--accent-2); outline-offset: 2px; }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { transition: none !important; animation: none !important; }
+    }
+	
+	/* Paired comparison block */
+    .comparison-eyebrow {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.76rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent-2);
+      margin-bottom: 1.1rem;
+      padding-top: 2.4rem;
+      border-top: 1px solid var(--rule);
+    }
+
+    .video-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+      color: var(--ink);
+      margin-bottom: 0.6rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .video-label .fps {
+      color: var(--ink-soft);
+      font-size: 0.74rem;
+    }
+
+    .shared-caption {
+      color: var(--ink-soft);
+      font-size: 0.94rem;
+      line-height: 1.65;
+      margin-top: 1.4rem;
+      border-left: 3px solid var(--accent-2);
+      padding-left: 1.1rem;
+    }
+	
+	/* A button that is announced but not yet live */
+    .link-block .is-pending {
+      background: transparent;
+      color: var(--ink-soft);
+      border: 1px dashed var(--rule);
+      cursor: default;
+    }
+    .link-block .is-pending:hover {
+      background: transparent;
+      color: var(--ink-soft);
+    }
+	
+	/* Paired hero media */
+    .media-frame {
+      display: block;
+      width: 100%;
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+    }
+    .hero-pair { align-items: flex-start; }
+	
+  </style>
+</head>
+
+<body>
+
+<!-- ================================================================
+     HERO. Title, authors, links, teaser video.
+     ================================================================ -->
+<section class="section" style="padding-top: 4rem;">
+  <div class="container is-max-desktop">
+    <div class="has-text-centered">
+
+      <!-- TODO 3: Update the venue line when the paper is accepted. -->
+      <!-- <p class="venue-eyebrow">IROS 2026 Workshop on Surgical Digital Twins</p> -->
+
+      <h1 class="publication-title">
+        FEM Paradigms for Heterogeneity Modeling in<br>
+        Multi-Material Tissue-Tumor Surgical Twins
+      </h1>
+
+      <!-- TODO 4: Replace the # placeholders with real personal or lab pages. -->
+      <div class="author-line">
+        <a href="https://www.linkedin.com/in/abhi-bjee/">Abhinaba Bhattacharjee</a><sup>1</sup>,
+        <a href="https://iuhealth.org/find-providers/provider/noah-e-shaikh-md-3756534">Noah Shaikh</a><sup>2,3</sup>,
+        <a href="https://medicine.iu.edu/faculty/26941/stefanidis-dimitrios">Dimitrios Stefanidis</a><sup>2</sup>,
+        <a href="https://qureshiahmed.github.io/">Ahmed Qureshi</a><sup>4</sup>,
+        <a href="https://engineering.purdue.edu/ME/People/ptProfile?resource_id=292617">Sohel Anwar</a><sup>1</sup>
+      </div>
+
+      <div class="affiliation-line">
+        <sup>1</sup>School of Mechanical Engineering, Purdue University &nbsp;&middot;&nbsp;
+        <sup>2</sup>Indiana University School of Medicine<br>
+        <sup>3</sup>School of Electrical and Computer Engineering, Purdue University &nbsp;&middot;&nbsp;
+        <sup>4</sup>Department of Computer Science, Purdue University
+      </div>
+
+      <!-- TODO 5: Delete any link block you do not have yet. An empty
+           button that leads nowhere looks worse than no button at all. -->
+      <div style="margin-top: 2rem;">
+	<!--
+        <span class="link-block">
+          <a href="static/pdfs/surgtwin_paper.pdf" class="button is-medium">
+            <span class="icon"><i class="fas fa-file-pdf"></i></span>
+            <span>Paper</span>
+          </a>
+        </span>
+        <span class="link-block">
+          <a href="https://arxiv.org/abs/XXXX.XXXXX" class="button is-medium">
+            <span class="icon"><i class="ai ai-arxiv"></i></span>
+            <span>arXiv</span>
+          </a>
+        </span>
+	
+        <span class="link-block">
+          <a href="https://github.com/YOURUSERNAME/simvinci" class="button is-medium">
+            <span class="icon"><i class="fab fa-github"></i></span>
+            <span>Code</span>
+          </a>
+        </span>
+	-->
+		<span class="link-block">
+          <span class="button is-medium is-pending" aria-disabled="true">
+            <span class="icon"><i class="fab fa-github"></i></span>
+            <span>Code &nbsp;&middot;&nbsp; on acceptance</span>
+          </span>
+        </span>
+        <span class="link-block">
+          <a href="static/pdfs/intuitive_poster.pdf" class="button is-medium">
+            <span class="icon"><i class="fas fa-image"></i></span>
+            <span>Poster</span>
+          </a>
+        </span>
+        <span class="link-block">
+          <a href="#video-results" class="button is-medium">
+            <span class="icon"><i class="fas fa-play"></i></span>
+            <span>Video</span>
+          </a>
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Teaser. This is the single most important asset on the page.
+     Use the side-by-side clip of tumor detachment versus interface
+     continuity. A viewer decides in four seconds whether to keep reading. -->
+	 
+<!-- Teaser. Scene overview above, stiffness variant comparison below. -->
+<section class="section" style="padding-top: 0;">
+  <div class="container is-max-desktop">
+
+    <figure>
+      <img class="media-frame" src="static/images/scene_overview.png"
+           alt="Two da Vinci instruments positioned above a translucent liver resting on a checkered ground plane. The tetrahedral mesh is visible through the surface and coloured by stress, and the tumour appears as a raised region near the contact site.">
+      <figcaption>
+	    Simulated Environment for a bimanual da Vinci Research Kit (dVRK) Patient Side Manipulator
+		(PSM) arms approaching a CT-derived ex vivo liver conntaining a subsurface tumor.
+		The organ is a single continuous volumetric tetrahedral mesh partitioned by a tumor convex hull
+        region of interest with stiffer elastic properties compared to parenchyma elasticity such that the 
+		tow regions share interface nodes to deform as one body.
+      </figcaption>
+    </figure>
+
+    <figure style="margin-top: 3rem;">
+      <p class="video-label"><span>Response across tumour stiffness variants</span></p>
+      <video class="media-frame" controls muted loop playsinline preload="none"
+             poster="static/images/poster_stiffness.png">
+        <source src="static/videos/stiffness_variants.mp4" type="video/mp4">
+      </video>
+      <figcaption>
+        The same palpation trajectory executed on three material configurations of the identical
+        4755 element mesh, with the tumour region of interest assigned
+        <span class="math">E = 25</span>, <span class="math">55</span> and
+        <span class="math">75 kPa</span> against a fixed parenchyma value of
+        <span class="math">E<sub>liver</sub> = 5.5 kPa</span>. Because the geometry, the node
+        positions and the contact configuration are held identical across the three, any difference
+        in the deformation field is attributable to the assigned modulus alone.
+      </figcaption>
+    </figure>
+
+  </div>
+</section>
+	 
+
+	 
+<!--
+<section class="section" style="padding-top: 0;">
+  <div class="container is-max-desktop">
+    <figure>
+      <video poster="static/images/teaser.png" autoplay muted loop playsinline
+             style="border: 1px solid var(--rule); border-radius: 4px;">
+        <source src="static/videos/palpation_teaser.mp4" type="video/mp4">
+      </video>
+      <figcaption>
+        A da Vinci Research Kit patient-side manipulator palpates a CT-derived ex vivo liver
+        containing a subsurface tumor. The same volumetric mesh carries two different sets of
+        elastic parameters, assigned per region of interest, so the tumor and the surrounding
+        parenchyma deform as one continuous body.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+-->
+
+<!-- ================================================================
+     ABSTRACT
+     ================================================================ -->
+<section class="section section-alt">
+  <div class="container is-max-desktop">
+    <h2 class="section-heading">Abstract</h2>
+    <!-- TODO 6: Paste your final paper abstract here, in two or three
+         paragraphs. What follows is a working version. -->
+    <div class="content">
+      <p>
+        Building a digital twin of a patient organ for real-time surgical rehearsal requires considering several parameters:  
+		how to represent a stiff inclusion, such as a tumor, inside softer surrounding tissue; boundary conditions, and constraints. The choice of formulation determines whether the
+        model survives gravity, whether the interface between the two materials stays intact under
+        instrument contact, and whether the simulation still runs fast enough to be interactive.
+      </p>
+      <p>
+        We compare three finite element formulations on a single CT-derived ex vivo liver scene.
+        The first treats the tumor and the liver as separate volumetric meshes held by fixed
+        constraints. The second couples two separate meshes with attachment constraints. The third
+        uses one continuous volumetric mesh partitioned by convex-hull regions of interest, with
+        distinct elastic parameters assigned per subregion. Each formulation is settled under
+        gravity and then palpated by a da Vinci Research Kit instrument inside the SOFA framework.
+      </p>
+      <p>
+        We find that both multi-body formulations lose interface integrity, with the tumor
+        separating from the liver cavity under full gravity, while the heterogeneous single-mesh
+        formulation preserves continuity by construction and resolves a positive, monotonic
+        apparent stiffness contrast under palpation while remaining above interactive frame rates.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     THE THREE FORMULATIONS
+     ================================================================ -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="section-heading">Three formulations, one scene</h2>
+    <p class="content">
+      Every formulation is run on the same liver geometry, the same gravity levels, and the same
+      palpation targets, so the only variable is how heterogeneity is represented.
+    </p>
+
+    <div class="columns" style="margin-top: 1.5rem;">
+      <div class="column">
+        <div class="formulation-card">
+          <span class="formulation-tag">Formulation A</span>
+          <h3>Uncoupled multi-body</h3>
+          <p>
+            Tumor and liver are separate volumetric meshes with uniform properties each, held in
+            place by fixed constraints. Simple to build, but nothing physically binds the two
+            surfaces together.
+          </p>
+        </div>
+      </div>
+      <div class="column">
+        <div class="formulation-card">
+          <span class="formulation-tag">Formulation B</span>
+          <h3>Constraint-coupled multi-body</h3>
+          <p>
+            The same two meshes, now joined by attachment constraints across the shared interface.
+            The constraint is an added artefact rather than a property of the material itself.
+          </p>
+        </div>
+      </div>
+      <div class="column">
+        <div class="formulation-card is-winner">
+          <span class="formulation-tag">Formulation C</span>
+          <h3>Heterogeneous single-mesh</h3>
+          <p>
+            One continuous mesh, partitioned by convex-hull regions of interest, each region given
+            its own Young's modulus and Poisson ratio. Interface nodes are shared, so continuity
+            holds by construction.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <figure style="margin-top: 2.5rem;">
+      <img src="static/images/formulations.png"
+           alt="Cutaway views of the three finite element formulations of the liver and tumor.">
+      <figcaption>
+        Cutaway views of the three formulations. Tetrahedral counts are 1013 tumor elements plus
+        3371 liver elements for the multi-body cases, and 4755 elements for the single mesh.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ================================================================
+     RESULTS: INTERFACE INTEGRITY
+     ================================================================ -->
+<section class="section section-alt">
+  <div class="container is-max-desktop">
+    <h2 class="section-heading">Interface integrity under gravity</h2>
+    <p class="content">
+      Before any instrument touches the organ, the model must simply hold together under its own
+      weight. We settle each formulation at one tenth of gravity and at full gravity, then measure
+      the signed distance across every interface node pair. A pair separated by more than one
+      millimetre counts as a failure.
+    </p>
+
+    <!-- TODO 7: Replace these numbers with your final settled values. -->
+    <div class="table-scroll" style="margin-top: 1.5rem;">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Formulation</th>
+            <th>Failed pairs at 0.1 g</th>
+            <th>Failed pairs at 1.0 g</th>
+            <th>Interface preserved</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>A &nbsp; Uncoupled multi-body</td>
+            <td>0.5 percent</td>
+            <td>100 percent</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td>B &nbsp; Constraint-coupled multi-body</td>
+            <td>57 percent</td>
+            <td>73 percent</td>
+            <td>No</td>
+          </tr>
+          <tr class="is-highlight">
+            <td>C &nbsp; Heterogeneous single-mesh</td>
+            <td>0 percent</td>
+            <td>0 percent</td>
+            <td>Yes</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="content" style="font-size: 0.92rem; color: var(--ink-soft); margin-top: 1rem;">
+      Under full gravity the constraint-coupled model shows interpenetration and separation
+      occurring at the same time in different regions of the interface, which is the signature of
+      a constraint fighting the underlying elasticity rather than expressing it.
+    </p>
+  </div>
+</section>
+
+<!-- ================================================================
+     RESULTS: PALPATION
+     ================================================================ -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="section-heading">Palpation response and stiffness discrimination</h2>
+	
+	<p class="content">
+      A Cadiere forceps instrument indents the liver directly above the embedded tumor, and the
+      response is recorded at four stages of the approach. Each row below shows the same four
+      stages under a different visualisation, so the surface behaviour, the internal mesh
+      behaviour and the stress field can be read against one another at matched depth.
+    </p>
+
+    <figure style="margin-top: 1.5rem;">
+      <img src="static/images/palpation_progression.png"
+           alt="Four rows showing liver surface deformation, internal wireframe, von Mises surface stress and cutaway stress wireframe, each at pre-indentation and at 7, 21 and 35 millimetres of indentation depth.">
+      <figcaption>
+        <strong>Palpation of the heterogeneous single-mesh liver twin at increasing indentation
+        depth.</strong> Columns show the pre-indentation state and indentation depths of 7, 21 and
+        35 millimetres.
+        <strong>Row A</strong> is the rendered organ surface, where the local depression forms under
+        the instrument while the rest of the organ retains its gross shape.
+        <strong>Row B</strong> is the volumetric wireframe, showing that the stiffer tumor region
+        translates and deforms together with the surrounding parenchyma rather than separating from
+        it, since the two materials share interface nodes in this formulation.
+        <strong>Row C</strong> is the von Mises stress field on the organ surface, which concentrates
+        into a compact region directly beneath the instrument tip as depth increases.
+        <strong>Row D</strong> is the same stress field on the cutaway tetrahedral mesh, where the
+        elevated stress band around the tumor inclusion is visible through the depth of the organ
+        rather than only at the contact point.
+      </figcaption>
+    </figure>
+
+    <p class="content" style="margin-top: 2rem;">
+      Quantitatively, five fixed-depth palpation points are indented at matched positions across
+      four material configurations. Local contact stiffness is the slope of contact force against
+      indentation depth, computed by sliding-window regression. Apparent contrast is that slope
+      over the tumor divided by the slope on a same-mesh homogeneous control, in which the tumor
+      region of interest is assigned the same modulus as the surrounding parenchyma
+      (<span class="math">E<sub>liver</sub> = E<sub>tumor</sub> = 5.5 kPa</span>), evaluated at
+      matched indentation depth.
+    </p>
+ 
+
+    <div class="table-scroll" style="margin-top: 2rem;">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Tumor region modulus</th>
+            <th>Contrast range across 5 points</th>
+            <th>Mean contrast</th>
+            <th>Frame rate</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>5.5 kPa (homogeneous control)</td>
+            <td>1.00 by definition</td>
+            <td>1.00</td>
+            <td>40 to 50 fps</td>
+          </tr>
+          <tr class="is-highlight">
+            <td>55 kPa</td>
+            <td>1.164 to 1.377</td>
+            <td>1.237</td>
+            <td>35 fps</td>
+          </tr>
+          <tr class="is-highlight">
+            <td>75 kPa</td>
+            <td>1.195 to 1.499</td>
+            <td>1.300</td>
+            <td>30 to 32 fps</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="content" style="font-size: 0.92rem; color: var(--ink-soft); margin-top: 1rem;">
+      Apparent contrast is well below the underlying ten times material ratio. This is the physically
+      expected outcome for an inclusion embedded within one centimetre of the surface, and it is why
+      contrast is reported as a curve against depth rather than as a single number.
+    </p>
+  </div>
+</section>
+
+<!-- ================================================================
+     VIDEO RESULTS
+     ================================================================ -->
+	 
+<section class="section section-alt" id="video-results">
+  <div class="container is-max-desktop">
+    <h2 class="section-heading">Video results</h2>
+
+    <!-- Result 1: interface integrity. Full width, because this is the
+         headline claim of the paper and deserves the space. -->
+    <figure style="margin-top: 1.5rem;">
+      <video controls muted loop playsinline preload="none"
+             poster="static/images/poster_settling.png"
+             style="border: 1px solid var(--rule); border-radius: 4px;">
+        <source src="static/videos/settling_comparison.mp4" type="video/mp4">
+      </video>
+      <figcaption>
+        <strong>Gravitational settling.</strong> In both the uncoupled and the constraint-coupled
+        multi-body formulations, the tumor falls out of the liver cavity. In the heterogeneous multimaterial
+        single-mesh formulation the tumor region deforms together with the organ and remains
+        inside the cavity, preserving interface continuity by construction.
+      </figcaption>
+    </figure>
+
+    <!-- Result 2: the solver comparison. Presented as a matched pair so
+         the reader reads them against each other rather than in sequence. -->
+    <p class="comparison-eyebrow">Palpation under two solver configurations</p>
+
+    <div class="columns">
+      <div class="column">
+        <figure>
+          <div class="video-label">
+            <span>Direct &nbsp;&middot;&nbsp; SparseLDL<sup>T</sup></span>
+            <!-- TODO: confirm this frame rate against your own logs. -->
+            <span class="fps">5 to 12 fps</span>
+          </div>
+          <video controls muted loop playsinline preload="none"
+                 poster="static/images/poster_ldl.png"
+                 style="border: 1px solid var(--rule); border-radius: 4px;">
+            <source src="static/videos/palpation_ldl.mp4" type="video/mp4">
+          </video>
+          <figcaption>
+            A direct factorisation of the assembled system matrix, paired with a generic constraint
+            correction, so the compliance carried into the constraint solve reflects the actual
+            finite element stiffness of the tissue.
+          </figcaption>
+        </figure>
+      </div>
+
+      <div class="column">
+        <figure>
+          <div class="video-label">
+            <span>Iterative &nbsp;&middot;&nbsp; Conjugate Gradient</span>
+            <!-- TODO: confirm this frame rate against your own logs. -->
+            <span class="fps">30 to 50 fps</span>
+          </div>
+          <video controls muted loop playsinline preload="none"
+                 poster="static/images/poster_cg.png"
+                 style="border: 1px solid var(--rule); border-radius: 4px;">
+            <source src="static/videos/palpation_cg.mp4" type="video/mp4">
+          </video>
+          <figcaption>
+            A matrix-free iterative solve, paired with an uncoupled constraint correction whose
+            diagonal scalar compliance is cheap to evaluate but does not carry the finite element
+            stiffness of the tissue.
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <!-- TODO: this is the honest statement of the trade off. Adjust the
+         first sentence once you have confirmed what your LDL clip shows. -->
+    <p class="shared-caption">
+      The two configurations sit at opposite ends of the same trade off. The direct solver produces
+      a physically meaningful compliance and therefore trustworthy contact forces, but it falls
+      below interactive rates on this mesh. The iterative solver holds interactive rates
+      comfortably, but its constraint correction cannot express the stiffness of the material, so
+      the extracted contact forces are unreliable as a basis for stiffness discrimination. Resolving
+      this tradeoff is the motivation for the compliant force sensor embodiment at the instrument
+      tip, for a future study.
+    </p>
+
+  </div>
+</section>
+	 
+<!--
+<section class="section section-alt" id="video-results">
+  <div class="container is-max-desktop">
+    <h2 class="section-heading">Video results</h2>
+
+    <div class="columns" style="margin-top: 1.5rem;">
+      <div class="column">
+        <figure>
+          <video controls muted loop playsinline preload="none"
+                 poster="static/images/poster_settling.png">
+            <source src="static/videos/settling_comparison.mp4" type="video/mp4">
+          </video>
+          <figcaption>
+            Gravitational settling: The Multibody uncoupled and constraint-coupled tumor falls out of the liver cavity.
+            The single-mesh multimaterial tumor region deforms with the organ and stays inside the cavity preserving interface continuity.
+          </figcaption>
+        </figure>
+      </div>
+      <div class="column">
+        <figure>
+          <video controls muted loop playsinline preload="none"
+                 poster="static/images/poster_retraction.png">
+            <source src="static/videos/grasp_retraction.mp4" type="video/mp4">
+          </video>
+          <figcaption>
+            Liver tissue retraction to open the tumor bed, executed by the semi-automated grasp
+            and transport primitives of the simulator.
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+-->
+
+<!-- ================================================================
+     SCENE GENERATION PIPELINE
+     ================================================================ -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="section-heading">Patient-specific scene generation</h2>
+    <p class="content">
+      Tumor cavity construction and mesh generation are automated through Autodesk Fusion, GMSH and
+      a Python interface, producing matched finite element tetrahedral volumetric meshes, collision and visual meshes for the
+      simulator. A single configuration is generated in between 0.005 and 0.65 seconds, which makes
+      it practical to sweep tumor size, depth and position for synthetic data generation.
+    </p>
+    <figure style="margin-top: 1.5rem;">
+      <img src="static/images/pipeline.png"
+           alt="Diagram of the automated tissue and tumor scene generation pipeline.">
+      <figcaption>
+        From segmented anatomy to a running simulation scene, with the tumor region of interest
+        defined by a convex hull and the tetrahedralization refined along that boundary.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ================================================================
+     BIBTEX
+     ================================================================ 
+<section class="section section-alt">
+  <div class="container is-max-desktop">
+    <div class="is-flex is-justify-content-space-between is-align-items-center" style="margin-bottom: 1rem;">
+      <h2 class="section-heading" style="margin-bottom: 0;">Cite this work</h2>
+      <button class="copy-button" onclick="copyBibtex(this)">Copy</button>
+    </div>
+    <!-- TODO 9: Update once the paper has real page numbers and a DOI. -->
+<!--	
+<pre class="bibtex" id="bibtex-block">@inproceedings{bhattacharjee2026surgtwin,
+  title     = {FEM Paradigms for Heterogeneity Modeling in Multi-Material
+               Tissue-Tumor Surgical Twins},
+  author    = {Bhattacharjee, Abhinaba and Shaikh, Noah and
+               Stefanidis, Dimitrios and Qureshi, Ahmed and Anwar, Sohel},
+  booktitle = {IEEE/RSJ International Conference on Intelligent Robots and
+               Systems (IROS) Workshop on Surgical Digital Twins},
+  year      = {2026}
+}</pre>
+  </div>
+</section>
+-->
+
+<!-- ================================================================
+     FOOTER
+     ================================================================ -->
+<footer class="footer">
+  <div class="container is-max-desktop has-text-centered">
+    <p style="margin-bottom: 0.9rem;">
+      <a href="https://github.com/AbhiBjee" aria-label="GitHub">
+        <i class="fab fa-github fa-lg"></i></a> &nbsp;&nbsp;
+      <a href="https://scholar.google.com/citations?user=HUQjD_kAAAAJ&hl=en" aria-label="Google Scholar">
+        <i class="ai ai-google-scholar ai-lg"></i></a> &nbsp;&nbsp;
+      <a href="https://www.linkedin.com/in/abhi-bjee" aria-label="LinkedIn">
+        <i class="fab fa-linkedin fa-lg"></i></a>
+    </p>
+    <p>
+      This page borrows its structure from the
+      <a href="https://nerfies.github.io">Nerfies</a> project page, whose source is licensed under a
+      <a href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons
+      Attribution ShareAlike 4.0 International License</a>. Please keep this attribution if you
+      reuse the layout.
+    </p>
+  </div>
+</footer>
+
+<script>
+  function copyBibtex(button) {
+    const text = document.getElementById('bibtex-block').innerText;
+    navigator.clipboard.writeText(text).then(function () {
+      const original = button.textContent;
+      button.textContent = 'Copied';
+      setTimeout(function () { button.textContent = original; }, 1800);
+    }).catch(function () {
+      button.textContent = 'Press Ctrl and C';
+    });
+  }
+</script>
+
+</body>
+</html>
