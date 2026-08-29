@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Semi-Automated Motion Primitives for Rigid and Deformable Manipulation in Simulated Robotic Surgery</title>
+
+  <meta name="description"
+        content="A semi-automated motion primitive framework for a simulated da Vinci Research Kit, with a single Grasp-Lock formulation covering rigid and deformable objects, evaluated on six Fundamentals of Robotic Surgery inspired tasks.">
+  <meta name="keywords"
+        content="robotic surgery, simulation, motion primitives, grasp-lock, dVRK, SOFA, domain randomization, surgical autonomy">
+  <meta name="author" content="Abhinaba Bhattacharjee">
+
+  <!-- TODO: update this URL once the page is live. -->
+  <meta property="og:title" content="Semi-Automated Motion Primitives for Force-aware Rigid and Deformable Manipulation in Simulated Robotic Surgery">
+  <meta property="og:description" content="A primitive layer between human supervision and the physics engine, with one Grasp-Lock formulation for rigid and deformable objects.">
+  <meta property="og:image" content="static/images/scene_overview.png">
+  <meta property="og:url" content="https://abhibjee.github.io/surgical-robotics-research/motion-primitives/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="static/images/scene_overview.png">
+
+  <meta name="citation_title" content="Semi-Automated Motion Primitives for Force-aware Rigid and Deformable Manipulation in Simulated Robotic Surgery">
+  <meta name="citation_author" content="Bhattacharjee, Abhinaba">
+  <meta name="citation_author" content="Shaikh, Noah">
+  <meta name="citation_author" content="Stefanidis, Dimitrios">
+  <meta name="citation_author" content="Qureshi, Ahmed H.">
+  <meta name="citation_author" content="Anwar, Sohel">
+  <meta name="citation_publication_date" content="2026">
+
+  <link rel="icon" href="static/images/favicon.ico">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/academicons@1.9.4/css/academicons.min.css">
+
+  <style>
+    :root {
+      --ink:        #14181d;
+      --ink-soft:   #4a5560;
+      --paper:      #ffffff;
+      --paper-alt:  #f5f6f4;
+      --accent:     #0f5b6b;
+      --accent-2:   #b8873a;
+      --rule:       #dfe2e0;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 17px;
+      line-height: 1.7;
+    }
+
+    .publication-title {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-weight: 700;
+      font-size: 2.4rem;
+      line-height: 1.2;
+      letter-spacing: -0.015em;
+    }
+    @media screen and (max-width: 768px) {
+      .publication-title { font-size: 1.7rem; }
+      body { font-size: 16px; }
+    }
+
+    .venue-eyebrow {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.78rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent-2);
+      margin-bottom: 1.1rem;
+    }
+
+    .author-line { font-size: 1.05rem; margin-top: 1.4rem; }
+    .author-line a { color: var(--accent); text-decoration: none; }
+    .author-line a:hover { text-decoration: underline; }
+    .affiliation-line { color: var(--ink-soft); font-size: 0.95rem; margin-top: 0.5rem; }
+
+    .back-link {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      text-decoration: none;
+    }
+    .back-link:hover { color: var(--accent); }
+
+    .section-heading {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-weight: 600;
+      font-size: 1.9rem;
+      margin-bottom: 1.2rem;
+    }
+    .section-heading::after {
+      content: "";
+      display: block;
+      width: 46px;
+      height: 3px;
+      background: var(--accent-2);
+      margin-top: 0.6rem;
+    }
+
+    .section-alt { background: var(--paper-alt); }
+
+    .link-block a {
+      background: var(--ink);
+      color: #ffffff;
+      border: none;
+      border-radius: 999px;
+      padding: 0 1.35rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: background 0.16s ease;
+    }
+    .link-block a:hover { background: var(--accent); color: #ffffff; }
+    .link-block a:focus-visible { outline: 3px solid var(--accent-2); outline-offset: 2px; }
+    .link-block { display: inline-block; margin: 0.3rem 0.25rem; }
+
+    .link-block .is-pending {
+      background: transparent;
+      color: var(--ink-soft);
+      border: 1px dashed var(--rule);
+      cursor: default;
+    }
+    .link-block .is-pending:hover { background: transparent; color: var(--ink-soft); }
+
+    .media-frame {
+      display: block;
+      width: 100%;
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+    }
+
+    .video-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+      color: var(--ink);
+      margin-bottom: 0.6rem;
+    }
+
+    figure figcaption {
+      color: var(--ink-soft);
+      font-size: 0.92rem;
+      line-height: 1.6;
+      margin-top: 0.9rem;
+    }
+
+    /* Layer stack for the architecture description */
+    .layer-row {
+      display: flex;
+      align-items: baseline;
+      gap: 1.2rem;
+      padding: 0.95rem 0;
+      border-bottom: 1px solid var(--rule);
+    }
+    .layer-row:first-of-type { border-top: 1px solid var(--rule); }
+    .layer-name {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      flex: 0 0 8.5rem;
+    }
+    .layer-text { color: var(--ink-soft); font-size: 0.97rem; }
+    @media screen and (max-width: 768px) {
+      .layer-row { display: block; }
+      .layer-name { margin-bottom: 0.3rem; }
+    }
+
+    table.data-table { width: 100%; border-collapse: collapse; font-size: 0.93rem; }
+    table.data-table th {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.74rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      text-align: left;
+      padding: 0.6rem 0.7rem;
+      border-bottom: 2px solid var(--ink);
+      font-weight: 500;
+    }
+    table.data-table td {
+      padding: 0.62rem 0.7rem;
+      border-bottom: 1px solid var(--rule);
+      font-variant-numeric: tabular-nums;
+    }
+    table.data-table td.num { text-align: right; }
+    table.data-table th.num { text-align: right; }
+    table.data-table tr.is-soft td { background: rgba(184, 135, 58, 0.10); }
+    .table-scroll { overflow-x: auto; }
+    .table-caption {
+      color: var(--ink-soft);
+      font-size: 0.89rem;
+      line-height: 1.6;
+      margin-top: 0.8rem;
+    }
+
+    .math {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-style: italic;
+      white-space: nowrap;
+    }
+    .math sub { font-style: normal; font-size: 0.72em; }
+
+    pre.bibtex {
+      background: var(--ink);
+      color: #e6ebe8;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      padding: 1.5rem;
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+    .copy-button {
+      background: transparent;
+      border: 1px solid var(--rule);
+      border-radius: 999px;
+      color: var(--ink-soft);
+      cursor: pointer;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.76rem;
+      letter-spacing: 0.08em;
+      padding: 0.35rem 0.9rem;
+      text-transform: uppercase;
+    }
+    .copy-button:hover { border-color: var(--accent); color: var(--accent); }
+
+    video, img { max-width: 100%; height: auto; display: block; }
+
+    footer.footer { background: var(--paper-alt); color: var(--ink-soft); font-size: 0.88rem; }
+    footer.footer a { color: var(--accent); }
+
+    a:focus-visible { outline: 3px solid var(--accent-2); outline-offset: 2px; }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { transition: none !important; }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- Back to the research hub. -->
+<div class="container is-max-desktop" style="padding-top: 1.5rem;">
+  <a class="back-link" href="../index.html">
+    <i class="fas fa-arrow-left"></i>&nbsp;&nbsp;Surgical Robotics Research
+  </a>
+</div>
+
+<!-- ================================================================
+     HERO
+     ================================================================ -->
+<section class="section" style="padding-top: 3rem;">
+  <div class="container is-max-desktop">
+    <div class="has-text-centered">
+
+      <!-- TODO: update on acceptance. -->
+	  <!--
+      <p class="venue-eyebrow">IROS 2026 Workshop on Embodied Learning for Surgical Robotics</p>
+	  -->
+
+      <h1 class="publication-title">
+        Semi-Automated Motion Primitives for Rigid and<br>
+        Deformable Manipulation in Simulated Robotic Surgery
+      </h1>
+
+      <!-- TODO: point these at real pages or remove the anchor tags. -->
+      <div class="author-line">
+        Abhinaba Bhattacharjee<sup>1</sup>,
+        Noah Shaikh<sup>2,3</sup>,
+        Dimitrios Stefanidis<sup>4</sup>,
+        Ahmed H. Qureshi<sup>5</sup>,
+        Sohel Anwar<sup>1</sup>
+      </div>
+
+      <div class="affiliation-line">
+        <sup>1</sup>Mechanical Engineering &nbsp;&middot;&nbsp;
+        <sup>2</sup>Electrical and Computer Engineering &nbsp;&middot;&nbsp;
+        <sup>5</sup>Computer Science, Purdue University<br>
+        <sup>3</sup>Otolaryngology &nbsp;&middot;&nbsp;
+        <sup>4</sup>Surgery, Indiana University School of Medicine
+      </div>
+
+      <div style="margin-top: 2rem;">
+        <span class="link-block">
+          <span class="button is-medium is-pending" aria-disabled="true">
+            <span class="icon"><i class="fas fa-file-pdf"></i></span>
+            <span>Paper &nbsp;&middot;&nbsp; under review</span>
+          </span>
+        </span>
+        <span class="link-block">
+          <a href="https://drive.google.com/file/d/1FGfMALEa32YpgVwOn3-xoaaPXyS8lRh2/view"
+             class="button is-medium">
+            <span class="icon"><i class="fas fa-play"></i></span>
+            <span>Reference video</span>
+          </a>
+        </span>
+        <span class="link-block">
+          <span class="button is-medium is-pending" aria-disabled="true">
+            <span class="icon"><i class="fab fa-github"></i></span>
+            <span>Code &nbsp;&middot;&nbsp; on acceptance</span>
+          </span>
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     TEASER: scene overview above, randomization video below
+     ================================================================ -->
+<section class="section" style="padding-top: 0;">
+  <div class="container is-max-desktop">
+
+    <figure>
+      <img class="media-frame" src="static/images/scene_overview.png"
+           alt="A simulated da Vinci Research Kit scene with a Cadiere forceps and a large needle driver under remote centre of motion constraints, operating on a Fundamentals of Robotic Surgery style board holding a rigid block, a surgical needle and a soft ring.">
+      <figcaption>
+        A simulated da Vinci Research Kit patient side manipulator with a Cadiere forceps and a
+        large needle driver, both under remote centre of motion constraints, operating on a
+        Fundamentals of Robotic Surgery style board that holds a rigid peg block, a surgical needle
+        and a deformable soft ring.
+      </figcaption>
+    </figure>
+
+    <figure style="margin-top: 3rem;">
+      <p class="video-label">Randomized episodes, executed by the primitive layer</p>
+      <video class="media-frame" controls muted loop playsinline preload="none"
+             poster="static/images/poster_randomization.png">
+        <source src="static/videos/domain_randomization.mp4" type="video/mp4">
+      </video>
+      <figcaption>
+        Successive episodes with randomized object pose and initial jaw state. No part of the
+        trajectory is scripted per episode. The same primitive sequence resolves the new
+        configuration each time, which is what makes the layer usable as a generator of supervised
+        ground truth trajectories rather than a demonstration recording.
+      </figcaption>
+    </figure>
+
+  </div>
+</section>
+
+<!-- ================================================================
+     ABSTRACT
+     ================================================================ -->
+<section class="section section-alt">
+  <div class="container is-max-desktop">
+    <h2 class="section-heading">Abstract</h2>
+    <div class="content">
+      <p>
+        Learning-based surgical autonomy is limited less by model capacity than by the availability
+        of physically consistent interaction data. Producing that data in simulation requires an
+        execution layer that is repeatable, supervisable, and equally valid for rigid instruments
+        and deformable tissue.
+      </p>
+      <p>
+        We present a semi-automated motion primitive framework for a simulated da Vinci Research
+        Kit patient side manipulator, built on the SOFA multiphysics engine. Four basic primitives
+        compose into four derived primitives beneath a supervision layer in which a human specifies
+        sparse waypoints and the primitives generate the executed trajectory. Grasping is handled by
+        a single Grasp-Lock formulation that covers rigid and deformable objects without a change of
+        code path.
+      </p>
+      <p>
+        Across 25 randomized episodes per task on six Fundamentals of Robotic Surgery inspired
+        tasks, the framework sustains 40 to 65 frames per second, succeeds in every isolated
+        episode, and reaches 84 to 100 percent success on the cascaded tasks.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     LAYERED ARCHITECTURE
+     ================================================================ -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="section-heading">Layered architecture</h2>
+    <p class="content">
+      The framework is organized in five layers. Command and intent descend from the task and
+      supervision layers through recomposable primitives to the physics engine, while state and jaw
+      constraint forces propagate back up.
+    </p>
+
+    <div style="margin-top: 1.5rem;">
+      <div class="layer-row">
+        <div class="layer-name">Task</div>
+        <div class="layer-text">
+          A finite state machine that sequences a task into primitive calls.
+        </div>
+      </div>
+      <div class="layer-row">
+        <div class="layer-name">Supervision</div>
+        <div class="layer-text">
+          Accepts sparse human waypoints, entered through a control interface, a game controller or
+          a haptic device.
+        </div>
+      </div>
+      <div class="layer-row">
+        <div class="layer-name">Primitive</div>
+        <div class="layer-text">
+          Reach, Path Follow, Jaw open and close, and Homing form the basic set. Approach, Grasp,
+          Transport and Release are derived from them, each with its own entry condition,
+          termination condition and failure signal.
+        </div>
+      </div>
+      <div class="layer-row">
+        <div class="layer-name">Trajectory</div>
+        <div class="layer-text">
+          Converts primitive targets into joint-space Hermite splines and Cartesian SLERP
+          interpolation.
+        </div>
+      </div>
+      <div class="layer-row">
+        <div class="layer-name">Physics</div>
+        <div class="layer-text">
+          Constraint-based rigid body and finite element simulation of the patient side manipulator
+          with remote centre of motion kinematics, endo-wrist articulation and jaw collision models,
+          coupled to rigid and deformable objects in SOFA.
+        </div>
+      </div>
+    </div>
+
+    <p class="content" style="margin-top: 1.8rem;">
+      The Reach primitive is reused inside every other primitive, so the whole set inherits one
+      inverse kinematics and one termination implementation. That is what allows the primitives to
+      be recomposed into long-horizon tasks without writing task-specific control code.
+    </p>
+
+    <!-- OPTIONAL: delete this figure if you do not export Fig. 1b separately. -->
+    <figure style="margin-top: 2rem;">
+      <img class="media-frame" src="static/images/architecture.png"
+           alt="Block diagram of the five layer architecture, showing command descending from the task layer to the physics layer and state and constraint forces propagating back up.">
+      <figcaption>
+        Command and intent descend through the stack; state and jaw constraint forces propagate
+        back up.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ================================================================
+     GRASP-LOCK
+     ================================================================ -->
+<section class="section section-alt">
+  <div class="container is-max-desktop">
+    <h2 class="section-heading">Grasp-Lock</h2>
+    <div class="content">
+      <p>
+        Jaw closure is admittance controlled, so the commanded closure velocity is modulated by the
+        resistance encountered at the jaws rather than driven to a fixed angle. When closure
+        resistance indicates contact, Grasp-Lock engages.
+      </p>
+      <p>
+        For a rigid object, the object pose is expressed as a fixed homogeneous transform relative
+        to the tool grasp frame, and the object is carried by that offset until release. For a
+        deformable object, the finite element nodes lying within a capture region attached to the
+        jaw frame are identified and bound to that frame, then released when the jaws open. Both
+        cases are expressed through the same primitive interface, so Transport is invoked
+        identically for a rigid needle, a rigid peg block and a compliant soft ring.
+      </p>
+      <p>
+        The capture region is not a tuning parameter. Its radius is taken directly from the
+        instrument model as the distance from the gripper midpoint to the jaw tip, so it adapts
+        across instruments without adjustment. The Large Needle Driver gives a capture radius of
+        <span class="math">3.0 mm</span> and the Cadiere Forceps <span class="math">8.0 mm</span>.
+      </p>
+      <p>
+        Contact forces are recovered from Lagrange multipliers at constraints enforcing
+        non-penetration, rather than from a penalty response to interpenetration, and no simulated
+        force sensor is instrumented at the jaws. These signals are used to detect grasp onset, slip
+        and collision events and to compare loading across repetitions. Because the interactive
+        frame rates are obtained with a conjugate gradient solver paired to an uncoupled constraint
+        correction, whose diagonal compliance approximation does not propagate the finite element
+        stiffness into the multiplier, absolute magnitudes should be read as relative to the
+        configuration rather than as calibrated forces.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     RESULTS
+     ================================================================ -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="section-heading">Results</h2>
+    <p class="content">
+      Six tasks derived from the Fundamentals of Robotic Surgery curriculum, in two families. The
+      isolated tasks randomize object pose and initial jaw state and exercise the Grasp primitive
+      alone. The cascaded tasks chain Approach, Grasp, Transport and Release with no intermediate
+      human input, and therefore test whether primitive termination conditions compose without
+      drift. Every task is run for 25 randomized episodes. Rows shaded gold are the deformable
+      tasks.
+    </p>
+
+    <!-- OPTIONAL: delete this figure if you do not export Fig. 2 separately. -->
+    <figure style="margin-top: 1.5rem;">
+      <img class="media-frame" src="static/images/tasks.png"
+           alt="Motion overlays of the six evaluated tasks, with isolated pick and place tasks on the top row and long horizon cascaded transfers on the bottom row.">
+      <figcaption>
+        The six evaluated tasks, shown as motion overlays of a single executed episode. Top row:
+        isolated pick and place of a rigid needle, a rigid peg block and a deformable soft ring.
+        Bottom row: long-horizon cascaded transfers of the same objects.
+      </figcaption>
+    </figure>
+
+    <h3 style="font-family: 'Source Serif 4', Georgia, serif; font-weight: 600;
+               font-size: 1.25rem; margin-top: 2.5rem; margin-bottom: 1rem;">
+      Isolated short-horizon tasks
+    </h3>
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Task</th>
+            <th class="num">Completion p95 (s)</th>
+            <th class="num">Release pos. err. (mm)</th>
+            <th class="num">Frame rate (fps)</th>
+            <th class="num">Success (%)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Peg block pick</td>
+            <td class="num">19.69 &plusmn; 4.50</td>
+            <td class="num">0.110 &plusmn; 0.03</td>
+            <td class="num">65.25</td>
+            <td class="num">100</td>
+          </tr>
+          <tr>
+            <td>Needle pick</td>
+            <td class="num">20.46 &plusmn; 4.50</td>
+            <td class="num">0.045 &plusmn; 0.02</td>
+            <td class="num">65.49</td>
+            <td class="num">100</td>
+          </tr>
+          <tr class="is-soft">
+            <td>Soft ring pick</td>
+            <td class="num">32.72 &plusmn; 4.63</td>
+            <td class="num">2.756 &plusmn; 1.22</td>
+            <td class="num">40.85</td>
+            <td class="num">100</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="font-family: 'Source Serif 4', Georgia, serif; font-weight: 600;
+               font-size: 1.25rem; margin-top: 2.5rem; margin-bottom: 1rem;">
+      Cascaded long-horizon transfer tasks
+    </h3>
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Task</th>
+            <th class="num">Completion p95 (s)</th>
+            <th class="num">Release pos. err. (mm)</th>
+            <th class="num">Frame rate (fps)</th>
+            <th class="num">Success (%)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Peg block post transfer</td>
+            <td class="num">20.87 &plusmn; 2.21</td>
+            <td class="num">0.073 &plusmn; 0.02</td>
+            <td class="num">60.13</td>
+            <td class="num">100</td>
+          </tr>
+          <tr>
+            <td>Needle tray transfer</td>
+            <td class="num">27.83 &plusmn; 2.32</td>
+            <td class="num">1.507 &plusmn; 0.95</td>
+            <td class="num">56.56</td>
+            <td class="num">92</td>
+          </tr>
+          <tr class="is-soft">
+            <td>Soft ring post transfer</td>
+            <td class="num">28.68 &plusmn; 3.43</td>
+            <td class="num">3.614 &plusmn; 1.15</td>
+            <td class="num">42.70</td>
+            <td class="num">84</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="table-caption">
+      A trial counts as successful when the object is released within 1.5 mm of the goal pose for
+      rigid bodies and within 5 mm for deformable bodies, with no drop at any point in the episode.
+      The cost of deformability shows up in release error and frame rate rather than in success
+      rate: error rises from below 0.11 mm on the rigid objects to 2.76 mm on the soft ring, and
+      frame rate falls from about 65 to 40.9 frames per second. Under composition, the dominant
+      failure mode is orientation convergence at the seating waypoint rather than loss of the grasp
+      itself.
+    </p>
+  </div>
+</section>
+
+<!-- ================================================================
+     BIBTEX
+     ================================================================ -->
+	 
+<!--
+<section class="section section-alt">
+  <div class="container is-max-desktop">
+    <div class="is-flex is-justify-content-space-between is-align-items-center"
+         style="margin-bottom: 1rem;">
+      <h2 class="section-heading" style="margin-bottom: 0;">Cite this work</h2>
+      <button class="copy-button" onclick="copyBibtex(this)">Copy</button>
+    </div>
+<pre class="bibtex" id="bibtex-block">@inproceedings{bhattacharjee2026primitives,
+  title     = {Semi-Automated Motion Primitives for Force-aware Rigid and
+               Deformable Manipulation in Simulated Robotic Surgery},
+  author    = {Bhattacharjee, Abhinaba and Shaikh, Noah and
+               Stefanidis, Dimitrios and Qureshi, Ahmed H. and Anwar, Sohel},
+  booktitle = {IEEE/RSJ International Conference on Intelligent Robots and
+               Systems (IROS) Workshop on Embodied Learning for Surgical Robotics},
+  year      = {2026}
+}</pre>
+  </div>
+</section>
+-->
+
+<!-- ================================================================
+     FOOTER
+     ================================================================ -->
+<footer class="footer">
+  <div class="container is-max-desktop has-text-centered">
+    <p style="margin-bottom: 0.9rem;">
+      <!-- TODO: replace these handles with your own. -->
+      <a href="https://github.com/AbhiBjee" aria-label="GitHub">
+        <i class="fab fa-github fa-lg"></i></a> &nbsp;&nbsp;
+      <a href="https://scholar.google.com/citations?user=HUQjD_kAAAAJ&hl=en" aria-label="Google Scholar">
+        <i class="ai ai-google-scholar ai-lg"></i></a> &nbsp;&nbsp;
+      <a href="https://www.linkedin.com/in/abhi-bjee/" aria-label="LinkedIn">
+        <i class="fab fa-linkedin fa-lg"></i></a>
+    </p>
+    <p>
+      This page borrows its structure from the
+      <a href="https://nerfies.github.io">Nerfies</a> project page, whose source is licensed under a
+      <a href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution
+      ShareAlike 4.0 International License</a>.
+    </p>
+  </div>
+</footer>
+
+<script>
+  function copyBibtex(button) {
+    const text = document.getElementById('bibtex-block').innerText;
+    navigator.clipboard.writeText(text).then(function () {
+      const original = button.textContent;
+      button.textContent = 'Copied';
+      setTimeout(function () { button.textContent = original; }, 1800);
+    }).catch(function () {
+      button.textContent = 'Press Ctrl and C';
+    });
+  }
+</script>
+
+</body>
+</html>

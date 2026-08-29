@@ -124,10 +124,14 @@
     <p class="page-eyebrow">Purdue University &nbsp;&middot;&nbsp; School of Mechanical Engineering</p>
     <h1 class="page-title">Surgical Robotics Research</h1>
     <p class="lede">
-      <!-- TODO: rewrite this paragraph in your own voice. Two sentences is enough. -->
-      Simulation, Finite Element digital Twin Modelling, Tactile Perception and Sim-to-real transfer for Robotic Surgery. The work below
-      builds physics-based digital twins of  deformable objects and soft tissues, extracts contact forces from them, and uses
-      those forces to drive Robotic Palpation for Tumor Localization or semi-automated motions for robotic manipulations in surgical skills tasks.
+      Two connected lines of work in robotic surgery simulation. The first is
+      <strong>surgical digital twin modelling</strong>, in which finite element models of soft
+      tissue and embedded tumours are built to stay physically continuous under gravity and
+      instrument contact while running at interactive rates, and are palpated to recover contact
+      forces for subsurface tumour localization. The second is <strong>semi-automated motion
+      primitives</strong>, an execution layer that turns sparse human waypoints into repeatable,
+      randomizable trajectories for both rigid instruments and deformable tissue, so that
+      physically consistent interaction data can be generated at scale for surgical autonomy.
     </p>
     <p class="lede" style="font-size: 0.98rem;">
       Maintained by <strong>Abhinaba Bhattacharjee</strong>, PhD candidate in Robotics and
@@ -140,7 +144,7 @@
   <div class="container is-max-desktop">
     <h2 class="section-heading">Projects</h2>
 
-    <!-- LIVE. This one is a real link because the folder exists. -->
+    <!-- LIVE -->
     <a class="project-entry" href="liver-tumor-surgical-twin/index.html">
       <span class="project-venue">IROS 2026 Workshop &nbsp;&middot;&nbsp; Project page</span>
       <div class="project-name">
@@ -153,27 +157,46 @@
       </p>
     </a>
 
+    <!-- LIVE -->
+    <a class="project-entry" href="motion-primitives/index.html">
+      <span class="project-venue">IROS 2026 Workshop &nbsp;&middot;&nbsp; Project page</span>
+      <div class="project-name">
+        Semi-Automated Motion Primitives<span class="arrow"><i class="fas fa-arrow-right"></i></span>
+      </div>
+      <p class="project-blurb">
+        A supervisable execution layer for a simulated da Vinci Research Kit, in which one
+        Grasp-Lock formulation covers both rigid and deformable objects without a change of code
+        path, evaluated across six Fundamentals of Robotic Surgery inspired tasks.
+      </p>
+    </a>
+
     <!-- PENDING. Notice this is a div and not a link, so it cannot be clicked.
-         When the folder is ready, change div to a and add href="SimVinci/",
-         then remove the is-pending class. -->
+         When the folder is ready, change div to a, add href="sim-vinci/index.html",
+         and remove the is-pending class. -->
     <div class="project-entry is-pending">
       <span class="project-venue">In preparation</span>
       <div class="project-name">SimVinci</div>
       <p class="project-blurb">
-        A real-time surgical simulation framework compatible with the da Vinci Research Kit, built
-        around shared motion primitives for semi-automated manipulation of both rigid and
-        deformable objects.
+        The full real-time surgical simulation framework that the projects above are built on. A
+        five-layer architecture spanning task specification, human supervision, motion primitives,
+        trajectory generation and constraint-based multiphysics, compatible with the da Vinci
+        Research Kit.
       </p>
     </div>
 
-    <div class="project-entry is-pending">
-      <span class="project-venue">IROS 2024</span>
-      <div class="project-name">SeeBelow</div>
+    <!-- LIVE, but hosted externally by the first author. -->
+    <a class="project-entry" href="https://raghavauppuluri13.github.io/seebelow.github.io/"
+       target="_blank" rel="noopener">
+      <span class="project-venue">IROS 2024 &nbsp;&middot;&nbsp; External project page</span>
+      <div class="project-name">
+        SeeBelow<span class="arrow"><i class="fas fa-arrow-up-right-from-square"></i></span>
+      </div>
       <p class="project-blurb">
         Subsurface tumour geometry reconstruction from robotic palpation trajectories, evaluated on
-        a physical manipulator with a triaxial force and motion probe.
+        a physical manipulator (Franka Emika Panda) Cobot with custom built force-motion sensing palpation probe.
       </p>
-    </div>
+    </a>
+  </p>
 
   </div>
 </section>
@@ -185,10 +208,9 @@
         <p style="margin: 0;">Abhinaba Bhattacharjee &nbsp;&middot;&nbsp; Purdue University</p>
       </div>
       <div class="column has-text-right-tablet">
-        <!-- TODO: replace these three handles with your own. -->
         <a href="https://github.com/abhibjee" aria-label="GitHub">
           <i class="fab fa-github fa-lg"></i></a> &nbsp;&nbsp;
-        <a href="https://scholar.google.com/citations?user=HUQjD_kAAAAJ&hl=en" aria-label="Google Scholar">
+        <a href="https://scholar.google.com/citations?user=HUQjD_kAAAAJ&amp;hl=en" aria-label="Google Scholar">
           <i class="ai ai-google-scholar ai-lg"></i></a> &nbsp;&nbsp;
         <a href="https://www.linkedin.com/in/abhi-bjee/" aria-label="LinkedIn">
           <i class="fab fa-linkedin fa-lg"></i></a> &nbsp;&nbsp;
